@@ -12,7 +12,14 @@ export class SerialPortInput implements Input {
             this.buffer = this.buffer + this.port.read();
 
             if (this.buffer[this.buffer.length - 1] === '\n') {
-                callback(this.buffer as any);
+                const rawData = this.buffer.split(',');
+                const occuredAt = rawData[0];
+                const data = {
+                    y: rawData[1],
+                };
+                const event = new SignalEvent(occuredAt, data);
+
+                callback(event);
                 this.buffer = '';
             }
         });
