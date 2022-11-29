@@ -10,18 +10,43 @@ const port = new SerialPort({
     baudRate: 9600,
 });
 
+const keys = [
+    'orientationX',
+    'orientationy',
+    'orientationZ',
+
+    'angVelocityX',
+    'angVelocityy',
+    'angVelocityZ',
+
+    'linearyAccelX',
+    'linearyAccely',
+    'linearyAccelZ',
+
+    'magnetometerX',
+    'magnetometery',
+    'magnetometerZ',
+
+    'accelerometerX',
+    'accelerometery',
+    'accelerometerZ',
+
+    'gravityX',
+    'gravityy',
+    'gravityZ',
+];
+
 const input = new SerialPortInput(port);
 
-output.writeHeader(new SignalEvent('0', { y: '0' }));
+output.writeHeader(keys);
 
 const startProcessing = async (): Promise<void> => {
     return new Promise((resolve) => {
         console.log(`Starting...!`);
         input.onRead((event: SignalEvent) => {
-            console.log(`GOT an Event!: ${event}`);
             output.write(event);
             resolve();
-        });
+        }, keys);
 
         setInterval(() => {}, 1000);
     });
@@ -29,5 +54,3 @@ const startProcessing = async (): Promise<void> => {
 (async function () {
     await startProcessing();
 })();
-
-console.log('ass');
